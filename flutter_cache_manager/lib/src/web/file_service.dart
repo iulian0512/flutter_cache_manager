@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:clock/clock.dart';
+import 'package:flutter_cache_manager/src/storage/file_system/file_name_validator.dart';
 import 'package:flutter_cache_manager/src/web/mime_converter.dart';
 import 'package:http/http.dart' as http;
 
@@ -117,7 +118,10 @@ class HttpGetResponse implements FileServiceResponse {
     final contentTypeHeader = _header(HttpHeaders.contentTypeHeader);
     if (contentTypeHeader != null) {
       final contentType = ContentType.parse(contentTypeHeader);
-      fileExtension = contentType.fileExtension;
+      fileExtension =
+          !FileNameValidator.isValidFileName(contentType.fileExtension)
+              ? '.file'
+              : contentType.fileExtension;
     }
     return fileExtension;
   }

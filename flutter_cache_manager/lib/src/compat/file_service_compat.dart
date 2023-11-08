@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:clock/clock.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_cache_manager/src/storage/file_system/file_name_validator.dart';
 import 'package:flutter_cache_manager/src/web/mime_converter.dart';
 
 class FileServiceCompat extends FileService {
@@ -67,7 +68,10 @@ class CompatFileServiceGetResponse implements FileServiceResponse {
     final contentTypeHeader = _header(HttpHeaders.contentTypeHeader);
     if (contentTypeHeader != null) {
       final contentType = ContentType.parse(contentTypeHeader);
-      fileExtension = contentType.fileExtension;
+      fileExtension =
+          !FileNameValidator.isValidFileName(contentType.fileExtension)
+              ? '.file'
+              : contentType.fileExtension;
     }
     return fileExtension;
   }
